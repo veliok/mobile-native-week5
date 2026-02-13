@@ -46,9 +46,17 @@ class WeatherViewModel: ViewModel() {
                 val response = apiService.getWeather(currentCity, apiKey)
                 _uiState.update { it.copy(weather = response, isLoading = false) }
             } catch (e: Exception) {
-                // Virheenkäsittely
-                _uiState.update { it.copy(errorMessage = "Haku epäonnistui: ${e.localizedMessage}",
-                    isLoading = false) }
+                // Virheenkäsittely tarkempien Retrofitin koodien kanssa
+                val error = when (e) {
+                    is retrofit2.HttpException -> {
+                        when (e.code()) {
+                            404 -> "Kaupunkia ei löytynyt."
+                            else -> "Virhe (${e.code()}). Yritä uudelleen."
+                        }
+                    }
+                    else -> "Jotain meni pieleen"
+                }
+                _uiState.update { it.copy(errorMessage = error, isLoading = false) }
             }
         }
     }

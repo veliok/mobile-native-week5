@@ -54,7 +54,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = viewModel()) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // "Hae sää"-painike
+                // "Hae sää" -painike
                 Button(onClick = {
                     if (input.isNotBlank()) {
                         viewModel.onSearchQueryChange(input)
